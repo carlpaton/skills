@@ -52,7 +52,7 @@ Secrets and variables are repository level, not GitHub Environments, so this wor
 | `AZURE_CREDENTIALS` | secret |
 | app settings you choose | secret or variable |
 
-Secret values are never written to a file or shown. They are piped from a read-only Azure lookup into `gh secret set`, or typed by you at the `gh` prompt. Creating the deploy service principal is a command you run yourself.
+Secret values are never written to a file or shown. They are piped from a read-only Azure lookup into `gh secret set`, or typed by you at the `gh` prompt. The deploy service principal (`AZURE_CREDENTIALS`) is created by `/gha:secrets` after you confirm, and only if the active `az` subscription is the expected one, the resource group exists and no principal of that name exists yet.
 
 ## Deploy targets
 
@@ -60,4 +60,4 @@ The workflows deploy into an existing Container App named `<prefix>-<service>-<e
 
 ## Safety
 
-The skills only write files and call `gh`. They never run a workflow, create or change Azure resources, or delete secrets or environments.
+The skills only write files and call `gh` and `az`. They never run a workflow, create or change Azure infrastructure, or delete secrets or environments. The one thing created in Azure is the deploy service principal, with your confirmation and under the checks above.

@@ -1,6 +1,6 @@
 {
   "name": "gha",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Create the GitHub Actions pipeline for a containerised web app or console worker: a pull request deploys to UAT, merging to main deploys to prod. Also sets the UAT_ and PROD_ prefixed repository secrets and variables.",
   "author": {
     "name": "Carl Paton",

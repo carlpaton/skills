@@ -63,5 +63,5 @@ App settings are extra names chosen with the user, one line each as `ConfigKey=N
 
 - Write files only. Do not commit unless asked. The workflows are not run by these skills.
 - Secret values never go in a file, in chat, or in a command line argument. They move from their source to `gh secret set` over a pipe or the prompt `gh` shows the user.
-- The skills never create or change Azure resources. Creating the service principal is a command the person runs.
+- The skills never create or change Azure infrastructure (resource groups, registries, apps, databases). The one exception is the deploy service principal, which `/gha:secrets` creates after the person confirms, only when the active subscription is the expected one, the resource group exists and no principal of that name exists, scoped to that resource group.
 - Pin actions to the major versions in the templates. Do not use `pull_request_target`, and do not echo secrets.
