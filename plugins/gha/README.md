@@ -54,6 +54,16 @@ Secrets and variables are repository level, not GitHub Environments, so this wor
 
 Secret values are never written to a file or shown. They are piped from a read-only Azure lookup into `gh secret set`, or typed by you at the `gh` prompt. The deploy service principal (`AZURE_CREDENTIALS`) is created by `/gha:secrets` after you confirm, and only if the active `az` subscription is the expected one, the resource group exists and no principal of that name exists yet.
 
+## Adding settings later
+
+When the app gains a setting (a database connection string, a storage key, an endpoint), add it in three steps. A Postgres connection string is the example.
+
+1. Add the key to `appsettings.json` first, with an empty or placeholder value, for example `ConnectionStrings:Default`. Never commit the real value. The skill reads `appsettings.json` and any infra files such as `pgsql.tf`, `blob-storage*.tf` and `foundry.tf`, and offers the keys it has not mapped yet.
+2. Run `/gha:deploy` again. It asks what to add, change or remove, in the form `ConfigKey=NAME`, for example `ConnectionStrings__Default=PG_CONNECTION_STRING`. For .NET the key is the `Section__Key` form of the setting the app reads. For each name it asks whether it is a **secret** (connection strings, keys) or a **variable** (endpoints, hosts, deployment names). It then updates the workflows and `docs/github-actions.md`.
+3. Run `/gha:secrets`. It reads the workflows, shows the new names as missing, and sets `UAT_PG_CONNECTION_STRING` and `PROD_PG_CONNECTION_STRING`. If the value comes from a read-only Azure lookup it pipes it straight in. Otherwise run `gh secret set UAT_PG_CONNECTION_STRING --repo <owner>/<repo>` and type the value at the prompt. A name that is already set is only overwritten when you say you are rotating it.
+
+The setting key must match what the app reads, or the deploy succeeds and the app fails at runtime. A value that is the same in every environment and not sensitive is written into the workflow as a literal instead.
+
 ## Deploy targets
 
 The workflows deploy into an existing Container App named `<prefix>-<service>-<env>` in resource group `<prefix>-<service>-<env>-rg`, with registry `<prefix><service>registry<env>`. These are the names the `infra` plugin's `tf-web` and `tf-worker` create, but this plugin does not need it: the skill reads the names from your Terraform if it can find it, and otherwise derives or asks.

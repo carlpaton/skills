@@ -2,6 +2,10 @@
 
 Changes to the `gha` plugin. Versions follow `version` in `.claude-plugin/plugin.json`.
 
+## 0.3.1
+
+- Changed: the README now explains how to add settings later, such as a Postgres connection string: add the key to `appsettings.json`, re-run `/gha:deploy` with `ConfigKey=NAME`, then run `/gha:secrets`.
+
 ## 0.3.0
 
 - Changed: `/gha:secrets` now creates the deploy service principal and sets `AZURE_CREDENTIALS` itself, after the person confirms. It only does so when the active `az` subscription matches the expected one, the resource group exists, no service principal of that name exists and the secret is not already set. The principal is scoped to the resource group, the secret is piped straight in, and the role assignment is checked afterwards. It never resets or deletes an existing principal.
