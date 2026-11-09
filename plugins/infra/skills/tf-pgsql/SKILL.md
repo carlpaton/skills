@@ -28,4 +28,4 @@ The admin user defaults to `<prefix>_psql_admin`. The password is never asked fo
 ## Notes
 
 - Changing the SKU or version later can force a replace. Read the plan for any destroy.
-- The zone is left to Azure.
+- `zone` is pinned to `"1"`. If it is unset, Azure assigns a zone at creation and the provider then fails the apply with `zone can only be changed when exchanged with the zone specified in high_availability.0.standby_availability_zone`. Zone 1 exists in every region that supports zones. For a region without zone support, remove the line.

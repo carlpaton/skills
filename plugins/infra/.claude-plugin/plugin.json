@@ -1,6 +1,6 @@
 {
   "name": "infra",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scaffold Azure Terraform for a containerised web app or console worker for UAT and prod, with optional blob storage, Foundry AI models and PostgreSQL.",
   "author": {
     "name": "Carl Paton",
