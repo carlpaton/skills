@@ -26,7 +26,7 @@ These names come from `{{infra_source}}`. If they change there, change them in `
 
 ## Secrets and variables
 
-Set on each GitHub Environment (`uat`, `prod`) with the same names. `/gha:secrets` sets them.
+Set as repository secrets and variables, once per environment with the prefix `UAT_` or `PROD_`, for example `UAT_ACR_SERVER` and `PROD_ACR_SERVER`. The table lists the name without the prefix. There are no GitHub Environments, so any workflow in the repo can read the prod values: protect `main` with required reviews and checks. `/gha:secrets` sets them.
 
 | Name | Kind | Used for |
 |------|------|----------|

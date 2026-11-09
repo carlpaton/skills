@@ -41,13 +41,14 @@ Read the repo's own conventions first (`CLAUDE.md`, `docs/conventions/deployment
 
 - There is no approval step in the pipeline. The gate is the pull request: review and green checks before merge. Do not add required reviewers, wait timers or manual approvals to the environments or workflows.
 - CI (build, format check and tests) must pass before any deploy.
-- One GitHub Environment per env, named `uat` and `prod`. Secrets and variables are set on the environment with the same names in each, so the workflow files contain no env prefixes.
+- No GitHub Environments. On a private repo they need a paid plan, and creating them needs admin rights. Secrets and variables are repository level, and the environment is a name prefix: `UAT_` and `PROD_`. `deploy.yml` passes `secret_prefix: UAT` or `PROD` and `deploy-environment.yml` picks the secret with `secrets[format('{0}_NAME', inputs.secret_prefix)]` (and `vars[...]` for variables). One set of workflow files serves both environments.
+- Because the secrets are repository level, any workflow in the repo can read the prod ones, and a PR branch that edits a workflow could too. Branch protection on `main` is the only guard. Mention this in the report.
 - Deploys to the same environment run one at a time and are never cancelled part way through, because several open PRs share one UAT.
 - Pull requests from forks get no secrets, so their deploy fails. That is expected.
 
 ## Secrets and variables
 
-Fixed names, set per environment:
+Fixed names. Each is set once per environment as `UAT_<name>` and `PROD_<name>`, for example `UAT_ACR_SERVER` and `PROD_ACR_SERVER`:
 
 | Name | Kind | Source |
 |------|------|--------|
@@ -56,7 +57,7 @@ Fixed names, set per environment:
 | `ACR_PASSWORD` | secret | registry admin password |
 | `AZURE_CREDENTIALS` | secret | JSON of a service principal that can deploy to the resource group |
 
-App settings are extra names chosen with the user, one line each as `ConfigKey=NAME`, with `NAME` a secret (connection strings, keys) or a variable (endpoints, deployment names, urls). If the infrastructure Terraform has add-ons, offer the likely ones: `pgsql.tf` (a connection string), `blob-storage*.tf` (a connection string each), `foundry.tf` (key, endpoint, deployments). Use the names the app's `appsettings.json` implies, for .NET `Section__Key`. Values that are the same in every environment and not sensitive (for example a container name) are written into the workflow as literals.
+App settings are extra names chosen with the user, one line each as `ConfigKey=NAME`, with `NAME` (set as `UAT_NAME` and `PROD_NAME`) a secret (connection strings, keys) or a variable (endpoints, deployment names, urls). If the infrastructure Terraform has add-ons, offer the likely ones: `pgsql.tf` (a connection string), `blob-storage*.tf` (a connection string each), `foundry.tf` (key, endpoint, deployments). Use the names the app's `appsettings.json` implies, for .NET `Section__Key`. Values that are the same in every environment and not sensitive (for example a container name) are written into the workflow as literals.
 
 ## Rules
 

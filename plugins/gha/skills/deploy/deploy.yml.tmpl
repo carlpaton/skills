@@ -30,6 +30,7 @@ jobs:
     uses: ./.github/workflows/deploy-environment.yml
     with:
       environment: uat
+      secret_prefix: UAT
     secrets: inherit
 
   prod:
@@ -39,4 +40,5 @@ jobs:
     uses: ./.github/workflows/deploy-environment.yml
     with:
       environment: prod
+      secret_prefix: PROD
     secrets: inherit

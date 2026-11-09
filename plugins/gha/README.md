@@ -16,9 +16,9 @@ Skills are then `/gha:deploy` and `/gha:secrets`.
 | Skill | Use it to |
 |-------|-----------|
 | `/gha:deploy [web\|worker]` | Create the workflows, a Dockerfile if there is none, and `docs/github-actions.md` listing every secret and variable |
-| `/gha:secrets` | Create the GitHub Environments and set the secrets and variables the workflows use |
+| `/gha:secrets` | Set the repository secrets and variables the workflows use, with a `UAT_` or `PROD_` prefix |
 
-Run `/gha:deploy` first, then `/gha:secrets`. When the app gains a setting such as a database connection, run `/gha:deploy` again: it adds the setting to the workflow once, and `/gha:secrets` then sets its value on both `uat` and `prod`. `/gha:secrets` reads the workflows to build its list, so it always matches what they use.
+Run `/gha:deploy` first, then `/gha:secrets`. When the app gains a setting such as a database connection, run `/gha:deploy` again: it adds the setting to the workflow once, and `/gha:secrets` then sets its value as `UAT_<name>` and `PROD_<name>`. `/gha:secrets` reads the workflows to build its list, so it always matches what they use.
 
 ## Flow
 
@@ -43,7 +43,7 @@ The web and worker workflows differ only in ingress: a web app deploys with exte
 
 ## Secrets
 
-Secrets and variables live on GitHub Environments `uat` and `prod` with the same names in each, so the workflows have no environment prefixes.
+Secrets and variables are repository level, not GitHub Environments, so this works on a private repo on a free plan. Each name is set twice, as `UAT_<name>` and `PROD_<name>`, and the workflow picks the one for its environment. The trade-off: any workflow in the repo can read the prod values, so protect `main`. Setting them needs the repo owner on a personal account.
 
 | Name | Kind |
 |------|------|

@@ -17,7 +17,7 @@ Create the pipeline for one service. Follow [../_shared/github-actions.md](../_s
    - the assembly name (`AssemblyName` in the csproj, else the csproj file name) and the major version from `global.json` or `TargetFramework`.
    - an existing `Dockerfile`. If there is none, offer to create one from [Dockerfile.dotnet.tmpl](Dockerfile.dotnet.tmpl): `{{runtime_image}}` is `aspnet` for web and `runtime` for worker, and `{{expose}}` is `EXPOSE 8080` plus a blank line for web, empty for worker.
 4. Ask for the app settings (see the shared doc). Offer the likely ones from the infra add-ons, and read `appsettings.json` to suggest the config keys. An empty list is fine. Add `ASPNETCORE_ENVIRONMENT` and `DOTNET_ENVIRONMENT` as literals, `Staging` for uat and `Production` for prod, unless the app already says otherwise.
-5. **Confirm** before writing: the files, the derived deploy targets, the app settings, and the flow (PR to UAT, merge to prod, no approval).
+5. **Confirm** before writing: the files, the derived deploy targets, the app settings, and the flow (PR to UAT, merge to prod, no approval, repository secrets prefixed `UAT_` and `PROD_`, no GitHub Environments).
 6. Render the templates in this directory into the repo:
 
    | Template | Writes to |
@@ -33,21 +33,21 @@ Create the pipeline for one service. Follow [../_shared/github-actions.md](../_s
    - `{{check_steps}}`: one step per check command, named for what it does, for example `- name: Format check` then `run: dotnet format --verify-no-changes`, indented 6 spaces. Keep the order build, format, test.
    - `{{image_name}}`: `<prefix>-<service>`. `{{dockerfile}}`: the Dockerfile path.
    - `{{ingress}}` is for web only: `targetPort: 8080` (the port the app listens on) and `ingress: external`, each indented 10 spaces. For worker leave it out entirely, a worker has no ingress.
-   - `{{app_env}}` and `{{env_vars}}`: put each secret or variable setting in an `env:` block on the deploy step (8 spaces) as `NAME: ${{ secrets.NAME }}` or `${{ vars.NAME }}`, and build `environmentVariables: |` as one line of space separated `Key=$NAME` or `Key=literal` pairs (10 spaces). With no secret or variable settings still emit `environmentVariables` for the literals. Values with spaces are not supported by the action. A literal that differs per environment is an expression, for example `${{ inputs.environment == 'prod' && 'Production' || 'Staging' }}`, so there is still one workflow file.
+   - `{{app_env}}` and `{{env_vars}}`: put each secret or variable setting in an `env:` block on the deploy step (8 spaces) as `NAME: ${{ secrets[format('{0}_NAME', inputs.secret_prefix)] }}` or `${{ vars[format('{0}_NAME', inputs.secret_prefix)] }}` (the repo secret is `UAT_NAME` or `PROD_NAME`; the env var and the `$NAME` in `environmentVariables` stay unprefixed), and build `environmentVariables: |` as one line of space separated `Key=$NAME` or `Key=literal` pairs (10 spaces). With no secret or variable settings still emit `environmentVariables` for the literals. Values with spaces are not supported by the action. A literal that differs per environment is an expression, for example `${{ inputs.environment == 'prod' && 'Production' || 'Staging' }}`, so there is still one workflow file.
    - Both `{{...}}` blocks above keep the trailing newline so the YAML lines stay separate.
-   - In `github-actions.md`, fill the tables from the same data. `{{secret_rows}}` lists the four fixed names and every app setting.
-7. Validate: parse each workflow as YAML (`python3 -c "import yaml,sys; yaml.safe_load(open(sys.argv[1]))" <file>`), and run `actionlint` if it is installed. Check that every `secrets.` and `vars.` name in the workflows is in `docs/github-actions.md`. Report failures with their output.
-8. Report what was written, the deploy targets, and the next steps: run `/gha:secrets`, then open a PR to see it deploy to UAT. Warn that merging deploys straight to prod with no approval. Mention what is a placeholder or assumption (port, `Staging` name, build once per environment) and any repo docs that describe a different flow.
+   - In `github-actions.md`, fill the tables from the same data. `{{secret_rows}}` lists the four fixed names and every app setting, without the `UAT_` or `PROD_` prefix.
+7. Validate: parse each workflow as YAML (`python3 -c "import yaml,sys; yaml.safe_load(open(sys.argv[1]))" <file>`), and run `actionlint` if it is installed. Check that every secret and variable name in the workflows (the `NAME` in `secrets[format('{0}_NAME', ...)]` and `vars[...]`) is in `docs/github-actions.md`. Report failures with their output.
+8. Report what was written, the deploy targets, and the next steps: run `/gha:secrets`, then open a PR to see it deploy to UAT. Warn that merging deploys straight to prod with no approval, and that the prod secrets are repository level, so any workflow in the repo can read them and branch protection on `main` is the only guard. Mention what is a placeholder or assumption (port, `Staging` name, build once per environment) and any repo docs that describe a different flow.
 
 ## Re-run: add, change or remove app settings
 
-Use this when the pipeline exists and the app gains a setting (a database connection, a storage account, an AI endpoint). The workflows are one set of files for both environments, so a setting is added once in the workflow and its value is then set on both `uat` and `prod`.
+Use this when the pipeline exists and the app gains a setting (a database connection, a storage account, an AI endpoint). The workflows are one set of files for both environments, so a setting is added once in the workflow and its value is then set as `UAT_<NAME>` and `PROD_<NAME>`.
 
-1. Read the current settings from `deploy-environment.yml`: the `env:` block on the deploy step (secrets and variables) and the pairs in `environmentVariables`. Show them as a table of config key, name, secret, variable or literal.
+1. Read the current settings from `deploy-environment.yml`: the `env:` block on the deploy step (secrets and variables, shown without the prefix) and the pairs in `environmentVariables`. Show them as a table of config key, name, secret, variable or literal.
 2. Ask what to add, change or remove, in the same `ConfigKey=NAME` form as the first run, and whether each new name is a secret or a variable. Offer likely names from new infra files (`pgsql.tf`, `blob-storage*.tf`, `foundry.tf`) and from `appsettings.json` keys not yet mapped.
 3. **Confirm** the change, then edit only those two places in `deploy-environment.yml`, keeping everything else byte for byte. Do not re-render the other files, and do not touch a customised `ci.yml`, `deploy.yml` or `Dockerfile`.
 4. Update `docs/github-actions.md`: its secrets table gets the new rows, and removed names go. Run the validation in step 7 above.
-5. Finish by offering to run `/gha:secrets`, which finds the new names as missing on both environments and sets them. For a removed name, say that the old secret or variable is still on GitHub and must be deleted by the person, because the skills never delete them.
+5. Finish by offering to run `/gha:secrets`, which finds the new names as missing for both prefixes and sets them. For a removed name, say that the old secret or variable is still on GitHub and must be deleted by the person, because the skills never delete them.
 
 ## Notes
 
