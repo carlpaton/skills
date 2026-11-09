@@ -1,0 +1,42 @@
+name: Deploy {{service}}
+run-name: Deploy {{service}} ${{ github.event_name }} by @${{ github.actor }}
+
+# A pull request deploys to UAT. Merging it to main deploys to prod.
+# There is no approval step, the pull request review is the gate.
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+
+  uat:
+    name: Deploy to UAT
+    if: github.event_name == 'pull_request'
+    needs: ci
+    uses: ./.github/workflows/deploy-environment.yml
+    with:
+      environment: uat
+    secrets: inherit
+
+  prod:
+    name: Deploy to prod
+    if: github.event_name == 'push'
+    needs: ci
+    uses: ./.github/workflows/deploy-environment.yml
+    with:
+      environment: prod
+    secrets: inherit

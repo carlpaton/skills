@@ -1,0 +1,25 @@
+name: CI
+run-name: CI ${{ github.event_name }} by @${{ github.actor }}
+
+# Called by deploy.yml, so CI runs once per event and gates the deploy.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Build, format and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+{{dotnet_setup}}
+
+{{check_steps}}

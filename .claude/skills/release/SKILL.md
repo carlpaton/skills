@@ -1,6 +1,6 @@
 ---
 name: release
-description: Release a plugin in this repo (sdlc or infra). Bump the version, update the changelog, validate, commit, push, create the GitHub release, then update the locally installed plugin. Use when plugin changes are ready to ship, or to get the latest installed version after a release. Local to this repo.
+description: Release a plugin in this repo (sdlc, infra or gha). Bump the version, update the changelog, validate, commit, push, create the GitHub release, then update the locally installed plugin. Use when plugin changes are ready to ship, or to get the latest installed version after a release. Local to this repo.
 argument-hint: <plugin> [patch|minor]
 ---
 

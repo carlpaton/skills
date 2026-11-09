@@ -28,6 +28,17 @@
         "azure",
         "infrastructure"
       ]
+    },
+    {
+      "name": "gha",
+      "source": "./plugins/gha",
+      "description": "GitHub Actions for a container web app or console worker: a PR deploys to UAT, merging to main deploys to prod.",
+      "category": "workflow",
+      "keywords": [
+        "github-actions",
+        "ci-cd",
+        "azure"
+      ]
     }
   ]
 }

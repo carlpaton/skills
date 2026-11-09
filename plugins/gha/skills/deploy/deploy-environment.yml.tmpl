@@ -1,0 +1,60 @@
+name: Deploy environment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Environment to deploy to (uat or prod)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build, push and deploy to ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    # The GitHub Environment supplies the secrets and variables.
+    environment: ${{ inputs.environment }}
+    # One deploy per environment at a time (several open PRs share UAT), and never cancel one part way through.
+    concurrency:
+      group: deploy-{{service}}-${{ inputs.environment }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get commit SHA
+        id: vars
+        run: echo "short_sha=$(git rev-parse --short ${{ github.sha }})" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to Azure Container Registry (ACR)
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ vars.ACR_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push image
+        env:
+          IMAGE: ${{ vars.ACR_SERVER }}/{{image_name}}:${{ steps.vars.outputs.short_sha }}
+        run: |
+          docker build -f {{dockerfile}} -t "$IMAGE" .
+          docker push "$IMAGE"
+
+      - name: Log in to Azure
+        uses: azure/login@v3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Container Apps (ACA)
+        uses: azure/container-apps-deploy-action@v1
+{{app_env}}        with:
+          registryUrl: ${{ vars.ACR_SERVER }}
+          imageToDeploy: ${{ vars.ACR_SERVER }}/{{image_name}}:${{ steps.vars.outputs.short_sha }}
+{{ingress}}          containerAppName: {{prefix}}-{{service}}-${{ inputs.environment }}
+          containerAppEnvironment: {{prefix}}-{{service}}-${{ inputs.environment }}-cae
+          resourceGroup: {{prefix}}-{{service}}-${{ inputs.environment }}-rg
+{{env_vars}}

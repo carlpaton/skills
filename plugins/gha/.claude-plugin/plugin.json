@@ -1,0 +1,12 @@
+{
+  "name": "gha",
+  "version": "0.1.0",
+  "description": "Create the GitHub Actions pipeline for a containerised web app or console worker: a pull request deploys to UAT, merging to main deploys to prod. Also sets up the GitHub Environments, secrets and variables.",
+  "author": {
+    "name": "Carl Paton",
+    "url": "https://github.com/carlpaton"
+  },
+  "repository": "https://github.com/carlpaton/skills",
+  "license": "MIT",
+  "keywords": ["github-actions", "ci-cd", "azure", "container-apps", "dotnet"]
+}
