@@ -8,13 +8,20 @@ Ask:
 
 1. **Deployment style.** Single deployable (monolith), modular monolith, or microservices? If microservices, how do services communicate (HTTP, messaging) and where does each one's data live?
 2. **Domain-driven design.** Is DDD used? If so, what are the bounded contexts, and are aggregates and domain events in use?
-3. **Layering.** How is each deployable structured, and which direction may dependencies point?
+3. **Layering.** How is each deployable structured, and which direction may dependencies point? Offer the alternatives (single project with folders, vertical slices) and record the one chosen and why, with its trade-off.
 
 Defaults:
 
 - Modular monolith until a service boundary is justified.
 - Layers `Domain`, `Application`, `Infrastructure` and a host project (`Api` or `Web`). Dependencies point inward: `Domain` references nothing, `Application` references `Domain`, `Infrastructure` references `Application`.
 - One solution, one project per layer, a `.Tests` project per layer under test.
+- This layering is Clean Architecture (close to Onion). Name it in the architecture convention. The trade-off is more projects and ceremony in return for compiler-enforced boundaries and easy unit testing, which is heavy for a small app.
+- Layer responsibilities to record:
+  - `Domain`: business types and rules. References nothing.
+  - `Application`: use cases. Defines the interfaces it needs (ports), such as repositories or email.
+  - `Infrastructure`: implements those interfaces (database, external APIs). This is how dependencies point inward.
+  - Host (`Api` or `Web`): HTTP and UI, and the dependency-injection wiring. It may reference `Infrastructure` only as the composition root.
+- Add a "where does new code go?" rule of thumb: business rule to `Domain`, use case or new port to `Application`, port implementation to `Infrastructure`, endpoint, page or view to the host.
 
 ## Testing
 

@@ -18,7 +18,7 @@ It decides and records. It does not scaffold code.
 
 | File | Holds |
 |------|-------|
-| `docs/conventions/architecture.md` | Architecture style and structure |
+| `docs/conventions/architecture.md` | Architecture style, structure, and what each part is responsible for |
 | `docs/conventions/testing.md` | What tests look like, where they live, how to run all and one |
 | `docs/conventions/deployment.md` | Environments and order, how a release is made, approvals, pre-flight, post-deploy checks, rollback |
 | `docs/conventions/operations.md` | What is monitored, normal and thresholds, severity tiers, triage owner, read and change limits on live systems |

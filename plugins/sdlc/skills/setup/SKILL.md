@@ -41,11 +41,12 @@ Write these in the project, show the user the result, and get a yes before commi
 - `docs/conventions/deployment.md`: the environments and their order, how a release is made (pipeline or manual), who approves each environment, the pre-flight list, the post-deploy checks, and the rollback. `/deploy` depends on it.
 - `docs/conventions/operations.md`: what is monitored and where logs and metrics live, what normal looks like and the thresholds that matter, the severity tiers, who owns triage, and what may be read or changed in a live system. `/maintain` depends on it.
 - `docs/conventions/<other>.md`: any further topic the profile covers, such as language, branching or CI.
-- `docs/decisions/NNNN-<slug>.md`: a short decision record (context, decision, consequences) for each significant choice, so it is not reversed without knowing why.
+- `docs/decisions/NNNN-<slug>.md`: a short decision record (context, decision, alternatives considered, consequences including trade-offs) for each significant choice, so it is not reversed without knowing why.
 - `CLAUDE.md`: create it, or add to it if it exists. Import the conventions with `@docs/conventions/<file>.md` and list the build, lint and test commands. Keep it short and do not duplicate the conventions.
 
 ## Rules
 
 - Do not mention a specific project in this skill or in the profiles. Project detail belongs in the project's own files.
+- When a convention names an architecture, name the pattern (so it can be looked up) and state what each part is responsible for, not only how the parts reference each other.
 - Record decisions as plain statements others can follow or check. Prefer wording that a test or hook could later enforce.
 - Do not create labels, forms, projects or other GitHub setup here.

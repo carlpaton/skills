@@ -1,6 +1,6 @@
 {
   "name": "sdlc",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A reusable, AI-first software development lifecycle: setup, plan, design, build, test, deploy and maintain, each driven by a skill and handed off through committed markdown files.",
   "author": {
     "name": "Carl Paton",
