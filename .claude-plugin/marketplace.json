@@ -39,6 +39,18 @@
         "ci-cd",
         "azure"
       ]
+    },
+    {
+      "name": "azdebug",
+      "source": "./plugins/azdebug",
+      "description": "Read-only debugging of Azure services in any tenant with the Azure CLI, starting with Foundry model deployments.",
+      "category": "debugging",
+      "keywords": [
+        "azure",
+        "debugging",
+        "foundry",
+        "log-analytics"
+      ]
     }
   ]
 }

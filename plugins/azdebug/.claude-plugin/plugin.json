@@ -1,0 +1,12 @@
+{
+  "name": "azdebug",
+  "version": "0.1.0",
+  "description": "Read-only debugging of Azure services in any tenant using the Azure CLI. Starts with Foundry / Azure OpenAI model deployments and reports status codes, failures, usage and quota as tables.",
+  "author": {
+    "name": "Carl Paton",
+    "url": "https://github.com/carlpaton"
+  },
+  "repository": "https://github.com/carlpaton/skills",
+  "license": "MIT",
+  "keywords": ["azure", "debugging", "foundry", "azure-openai", "log-analytics"]
+}

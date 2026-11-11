@@ -1,0 +1,47 @@
+## Foundry debug: {{account}} ({{tenant}} / {{subscription}})
+
+**Window:** {{window_start}} to {{window_end}} UTC
+**Source:** {{source}} <!-- metrics | request logs | metrics and request logs -->
+**Request logs:** {{logs_status}} <!-- enabled to <workspace>, or "not collected: no diagnostic settings" -->
+
+### Summary
+
+{{summary}} <!-- two sentences at most: the headline failure rate and the likeliest cause, or "no failures in the window" -->
+
+### Deployments
+
+| Deployment | Model | Version | SKU | Capacity (K TPM) | State |
+|------------|-------|---------|-----|------------------|-------|
+{{deployment_rows}}
+
+### Status codes
+
+| Deployment | Status | Count | Share of deployment |
+|------------|--------|-------|---------------------|
+{{status_rows}}
+
+### Failures over time
+
+| Hour (UTC) | Deployment | Status | Count |
+|------------|------------|--------|-------|
+{{failure_rows}}
+
+### Usage
+
+| Deployment | Prompt tokens | Generated tokens | Peak tokens in one hour |
+|------------|---------------|------------------|-------------------------|
+{{usage_rows}}
+
+### Findings
+
+| # | Finding | Evidence | Confidence |
+|---|---------|----------|------------|
+{{finding_rows}}
+
+### Not visible
+
+{{not_visible}} <!-- bullet list of what the available data cannot show, e.g. error bodies, request durations, caller identity -->
+
+### Recommendations
+
+{{recommendations}} <!-- numbered list, most useful first. Offer, do not do -->

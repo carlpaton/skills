@@ -6,6 +6,7 @@ Carl Paton's Claude Code skills, grouped into plugins and published through one 
 |--------|----------------|------|
 | `sdlc` | An AI-first software development lifecycle: setup, plan, design, build, test, deploy, maintain | [plugins/sdlc](plugins/sdlc/README.md) |
 | `infra` | Scaffolding Azure Terraform for a container web app or console worker, with optional add-ons | [plugins/infra](plugins/infra/README.md) |
+| `azdebug` | Read-only debugging of Azure services in any tenant with the Azure CLI, starting with Foundry model deployments | [plugins/azdebug](plugins/azdebug/README.md) |
 | `gha` | GitHub Actions for a container web app or console worker: a PR deploys to UAT, a merge to `main` deploys to prod | [plugins/gha](plugins/gha/README.md) |
 
 ## Installation
