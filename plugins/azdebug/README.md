@@ -16,6 +16,7 @@ Skills are then `/azdebug:foundry` and so on.
 | Skill | Use it to |
 |-------|-----------|
 | `/foundry [tenant] [account] [window]` | Debug failing or slow Foundry / Azure OpenAI deployments: status codes, when failures happened, token usage, quota |
+| `/blobs [tenant] [account] [container] [prefix] [pull\|show]` | Find files in a storage account and pull them to local disk, or read them into context as a structure summary or capped excerpt |
 
 Planned: Log Analytics queries for web apps and workers (Container Apps console and system logs), and more as they come up.
 
@@ -30,8 +31,8 @@ A structured report, always in the same order, with tables: deployments, status 
 
 ## Safety
 
-Only `list`, `show`, metrics and log queries. The skills never create, change or delete anything in Azure, including diagnostic settings, which they recommend rather than create. They do not print prompt or response bodies from logs.
+Only `list`, `show`, metrics, log queries and blob list and download. Blob access uses your own login first. The account key is used only if you agree, and is never printed. The skills never create, change or delete anything in Azure, including diagnostic settings, which they recommend rather than create. They do not print prompt or response bodies from logs.
 
 ## Layout
 
-Shared rules and the metrics helper are in [skills/_shared](skills/_shared). Each skill has its own `SKILL.md`. The report every skill must fill in is a template next to it, for Foundry [skills/foundry/report.md.tmpl](skills/foundry/report.md.tmpl).
+Shared rules, the metrics helper and the blob helper (`blobs.py`) are in [skills/_shared](skills/_shared). Each skill has its own `SKILL.md`. The report every skill must fill in is a template next to it, for Foundry [skills/foundry/report.md.tmpl](skills/foundry/report.md.tmpl).

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0
+
+### Added
+- `/azdebug:blobs`: find files in a storage account and pull them to local disk or read them into context (`--shape` summary, capped excerpts). Defaults to your login, with the account key only on request.
+- `blobs.py` shared helper: read-only list, pull (no overwrite) and show.
+
 ## 0.1.0
 
 ### Added
