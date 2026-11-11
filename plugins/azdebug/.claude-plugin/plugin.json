@@ -1,7 +1,7 @@
 {
   "name": "azdebug",
-  "version": "0.2.0",
-  "description": "Read-only debugging of Azure services in any tenant using the Azure CLI. Foundry / Azure OpenAI deployments (status codes, failures, usage, quota as tables) and reading files from Azure Storage blobs.",
+  "version": "0.3.0",
+  "description": "Read-only debugging of Azure services in any tenant using the Azure CLI. Foundry / Azure OpenAI deployments (status codes, failures, usage, quota as tables) reading files from Azure Storage blobs, and querying Log Analytics for web app and worker logs.",
   "author": {
     "name": "Carl Paton",
     "url": "https://github.com/carlpaton"

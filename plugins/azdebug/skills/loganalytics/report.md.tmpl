@@ -1,0 +1,54 @@
+## Log Analytics debug: {{workspace}} ({{tenant}} / {{subscription}})
+
+**Window:** {{window_start}} to {{window_end}} UTC
+**Workspace id:** {{workspace_id}}
+**App:** {{app}} <!-- Container App name(s) seen in the logs, or "none" -->
+**Data available from:** {{oldest_data}} <!-- oldest row in the window, from the tables preset: the real limit of the investigation -->
+
+### Summary
+
+{{summary}} <!-- two sentences at most: how many failures, when, and the likeliest cause, or "no failures in the window" -->
+
+### Tables with data
+
+| Table | Rows | Oldest (UTC) | Newest (UTC) |
+|-------|------|--------------|--------------|
+{{table_rows}}
+
+### Console log levels
+
+| Level | Logger | Lines | Newest (UTC) |
+|-------|--------|-------|--------------|
+{{level_rows}}
+
+### Failures over time
+
+| Hour (UTC) | Failures |
+|------------|----------|
+{{failure_rows}}
+
+### Causes
+
+| Exception | Count | Oldest (UTC) | Newest (UTC) |
+|-----------|-------|--------------|--------------|
+{{exception_rows}}
+
+### Platform events
+
+| Type | Reason | Events | Newest (UTC) |
+|------|--------|--------|--------------|
+{{event_rows}}
+
+### Findings
+
+| # | Finding | Evidence | Confidence |
+|---|---------|----------|------------|
+{{finding_rows}}
+
+### Not visible
+
+{{not_visible}} <!-- bullet list of what these logs cannot show, e.g. successful requests, request durations, request ids, message bodies -->
+
+### Recommendations
+
+{{recommendations}} <!-- numbered list, most useful first. Offer, do not do -->

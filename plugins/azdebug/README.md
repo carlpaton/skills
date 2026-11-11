@@ -17,8 +17,9 @@ Skills are then `/azdebug:foundry` and so on.
 |-------|-----------|
 | `/foundry [tenant] [account] [window]` | Debug failing or slow Foundry / Azure OpenAI deployments: status codes, when failures happened, token usage, quota |
 | `/blobs [tenant] [account] [container] [prefix] [pull\|show]` | Find files in a storage account and pull them to local disk, or read them into context as a structure summary or capped excerpt |
+| `/loganalytics [tenant] [workspace] [window] [preset\|KQL]` | Query Log Analytics for a web app or worker: console logs, failures, exceptions, restarts and scaling events, with canned queries or custom read-only KQL |
 
-Planned: Log Analytics queries for web apps and workers (Container Apps console and system logs), and more as they come up.
+Planned: canned Foundry request-log queries once a Foundry account sends diagnostic logs to a workspace, and more as they come up.
 
 ## Using it
 
@@ -27,7 +28,9 @@ Planned: Log Analytics queries for web apps and workers (Container Apps console 
 
 ## Output
 
-A structured report, always in the same order, with tables: deployments, status codes (with the share per deployment), failures over time, usage, then findings with evidence and confidence, and recommendations. Gaps in the data, such as no request logs, are reported as findings.
+Both `/foundry` and `/loganalytics` fill in a mandatory template, so results always look the same. `/loganalytics` reports in this order: tables with data, console log levels, failures over time, causes (exceptions), platform events, then findings, what is not visible, and recommendations.
+
+`/foundry` produces a structured report, always in the same order, with tables: deployments, status codes (with the share per deployment), failures over time, usage, then findings with evidence and confidence, and recommendations. Gaps in the data, such as no request logs, are reported as findings.
 
 ## Safety
 
@@ -35,4 +38,4 @@ Only `list`, `show`, metrics, log queries and blob list and download. Blob acces
 
 ## Layout
 
-Shared rules, the metrics helper and the blob helper (`blobs.py`) are in [skills/_shared](skills/_shared). Each skill has its own `SKILL.md`. The report every skill must fill in is a template next to it, for Foundry [skills/foundry/report.md.tmpl](skills/foundry/report.md.tmpl).
+Shared rules, the metrics helper, the blob helper (`blobs.py`) and the Log Analytics helper (`loganalytics.py`) are in [skills/_shared](skills/_shared). Each skill has its own `SKILL.md`. The report every skill must fill in is a template next to it, for Foundry [skills/foundry/report.md.tmpl](skills/foundry/report.md.tmpl) and for Log Analytics [skills/loganalytics/report.md.tmpl](skills/loganalytics/report.md.tmpl).

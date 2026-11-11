@@ -28,3 +28,5 @@ Do not print prompts, responses, keys, connection strings or tokens from logs. S
 ## Helper
 
 [metrics.py](metrics.py) wraps `az monitor metrics list` and prints non-empty buckets as a table. Run it with `python3 -I`.
+
+[loganalytics.py](loganalytics.py) lists Log Analytics workspaces and runs read-only KQL, with canned queries for Container Apps. [blobs.py](blobs.py) lists, pulls and reads blobs.
