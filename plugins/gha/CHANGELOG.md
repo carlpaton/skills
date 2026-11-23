@@ -2,6 +2,10 @@
 
 Changes to the `gha` plugin. Versions follow `version` in `.claude-plugin/plugin.json`.
 
+## 0.3.2
+
+- Fixed: `/gha:deploy` now writes secret settings in `environmentVariables` in double quotes, `Key="$NAME"`. Unquoted, a connection string containing `;` (such as an Azure Storage one) was cut at the first `;` by the shell, so the app got a truncated value and failed at startup. Existing pipelines with a secret connection string need the quotes added by hand.
+
 ## 0.3.1
 
 - Changed: the README now explains how to add settings later, such as a Postgres connection string: add the key to `appsettings.json`, re-run `/gha:deploy` with `ConfigKey=NAME`, then run `/gha:secrets`.

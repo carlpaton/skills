@@ -57,7 +57,7 @@ Fixed names. Each is set once per environment as `UAT_<name>` and `PROD_<name>`,
 | `ACR_PASSWORD` | secret | registry admin password |
 | `AZURE_CREDENTIALS` | secret | JSON of a service principal that can deploy to the resource group |
 
-App settings are extra names chosen with the user, one line each as `ConfigKey=NAME`, with `NAME` (set as `UAT_NAME` and `PROD_NAME`) a secret (connection strings, keys) or a variable (endpoints, deployment names, urls). If the infrastructure Terraform has add-ons, offer the likely ones: `pgsql.tf` (a connection string), `blob-storage*.tf` (a connection string each), `foundry.tf` (key, endpoint, deployments). Use the names the app's `appsettings.json` implies, for .NET `Section__Key`. Values that are the same in every environment and not sensitive (for example a container name) are written into the workflow as literals.
+App settings are extra names chosen with the user, one line each as `ConfigKey=NAME`, with `NAME` (set as `UAT_NAME` and `PROD_NAME`) a secret (connection strings, keys) or a variable (endpoints, deployment names, urls). If the infrastructure Terraform has add-ons, offer the likely ones: `pgsql.tf` (a connection string), `blob-storage*.tf` (a connection string each), `foundry.tf` (key, endpoint, deployments). Use the names the app's `appsettings.json` implies, for .NET `Section__Key`. In `environmentVariables` a secret is always written in double quotes, `Key="$NAME"`, because connection strings contain `;` and an unquoted one is cut at the first `;`. Values that are the same in every environment and not sensitive (for example a container name) are written into the workflow as literals.
 
 ## Rules
 
